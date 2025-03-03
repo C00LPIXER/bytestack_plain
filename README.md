@@ -1,5 +1,4 @@
 ---
-
 # Detailed Feature Specification (DFS)  
 **Project Name**: ByteStack  
 **Version**: v1.0 (Core) + v2.0 (Coins & Extras)  
@@ -7,7 +6,6 @@
 **Stack**: React (Frontend), Node.js + Express (Backend), MongoDB (Database), Stripe (Payments), Cloudinary (File Storage), Nodemailer (Notifications)  
 **Timeline**: 6 Weeks (v1, Solo), v2 TBD  
 **Objective**: Build a scalable, dev-focused blog platform with site-wide subscriptions, rich content, discussions, social features, and future monetization via coins.
-
 ---
 
 ## Module Breakdown

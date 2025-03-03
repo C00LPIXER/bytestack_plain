@@ -168,7 +168,7 @@
   - `PATCH /admin/blogs/:id`  
 
 ---
-
+<!---
 ### 7. Infrastructure Module
 **Portal**: Shared  
 **Objective**: Support all modules with robust backend and deployment.  
@@ -189,7 +189,7 @@
 
 ---
 
-<!-- ## 6-Week Development Plan (Solo)
+ ## 6-Week Development Plan (Solo)
 - **Week 1: Planning & Setup**  
   - Repo: Initialize React + Express, connect MongoDB Atlas.  
   - Wireframes: Sketch User, Blogger, Admin portals.  

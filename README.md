@@ -243,18 +243,6 @@
 ```
 
 ---
-
-### What We Added
-1. **SEO Checker (2.5)**  
-   - Makes blogs search-engine friendly—critical for discoverability.  
-   - Real-time feedback keeps bloggers on point.  
-2. **Blogger Analytics (2.6)**  
-   - Gives bloggers insight into their impact (views, discussions, followers).  
-   - Motivates content creation.  
-3. **Coin & Withdrawal (Module 7)**  
-   - Full v2 feature—coins for reads, manual payout system.  
-   - Ties into your monetization vision.
-
 <!---
 
 ### Your 6-Week v1 Plan (Updated)

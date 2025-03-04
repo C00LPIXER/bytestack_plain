@@ -61,12 +61,12 @@
 - **2.4 Profile Integration**  
   - List: Show user’s blogs on profile (filter by `userId`).  
   - Deliverable: Blog list component.  
-- **2.5 SEO Checker** *(New)*  
+- **2.5 SEO Checker** 
   - Check: Analyze blog for SEO (e.g., title length < 60 chars, metaDescription 120-160 chars, at least one H1, image alt tags).  
   - Feedback: Show pass/fail in editor UI (e.g., “Add more keywords” or “Good to go”).  
   - Tools: Use a lightweight library (e.g., custom JS logic or `seo-analyzer`).  
   - Deliverable: Real-time SEO feedback in editor.  
-- **2.6 Blogger Analytics** *(New)*  
+- **2.6 Blogger Analytics**
   - Metrics: Views (`views` count), discussion count (aggregate `discussions` by `blogId`), follower growth.  
   - UI: Dashboard tab on profile (e.g., “Your Stats”).  
   - API: `GET /user/:id/analytics` (auth required, `userId` match).  

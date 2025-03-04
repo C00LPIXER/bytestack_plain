@@ -255,24 +255,32 @@
 
 ### 7. Coin & Withdrawal Module
 **Portal**: Blogger + Admin  
-**Objective**: Reward bloggers with coins for premium reads and manage withdrawals.  
+**Objective**: Reward bloggers with coins for premium reads and manage withdrawals with a scalable, secure system.  
 **Features**:  
 - **7.1 Coin Earning**  
-  - Logic: Award 1 coin per premium blog read (`views` increment if subbed/trial).  
-  - Field: Add `coins: Number` to user doc.  
-  - Trigger: On `GET /blogs/:id` (premium check).  
-  - Deliverable: Coin accrual system.  
+  - **Logic**: Award 1 coin per premium blog read, tracked via a unique read system (`views` increment only for subscribed/trial users).  
+  - **Field**: Add `coins: Number` to user document for tracking earnings.  
+  - **Trigger**: On `GET /blogs/:id` when a premium blog is accessed by a valid subscriber/trial user.  
+  - **Explanation**: Ensures coins are awarded only for unique premium reads by subscribed/trial users, prevents duplicates with a `reads` collection, and updates `views` and `coins` atomically.  
+  - **Deliverable**: Coin accrual system integrated into blog view endpoint.  
+
 - **7.2 Wallet View**  
-  - Display: Show `coins` on blogger profile + lifetime earnings.  
-  - API: `GET /user/:id/wallet` (auth required).  
-  - Deliverable: Wallet UI component.  
+  - **Display**: Show current `coins` balance and lifetime earnings (sum of approved payouts) on blogger profile.  
+  - **API**: `GET /user/:id/wallet` (auth required, returns `{ coins: number, lifetimeEarnings: number }`).  
+  - **Deliverable**: Wallet UI component with real-time balance display (TypeScript-typed response).  
+
 - **7.3 Withdrawal**  
-  - Threshold: 100 coins = ₹250.  
-  - Process: Blogger submits request, admin approves manually.  
-  - Action: Deduct `coins`, add to `payouts` collection, notify blogger.  
-  - APIs: `POST /withdraw` (auth required), `GET /admin/payouts`, `PATCH /admin/payouts/:id` (approve/reject).  
-  - Deliverable: Withdrawal form + admin payout queue.  
-**Dependencies**: Blog Module (views), User Module (auth), Admin Module (approvals).  
+  - **Threshold**: 1000 coins = ₹200 (updated from 100 coins = ₹250).  
+  - **Process**: Blogger submits withdrawal request when `coins >= 1000`, admin reviews and approves manually.  
+  - **Action**: Deduct `coins` from user, create a `payout` record, notify blogger via Socket.IO/email (Nodemailer).  
+  - **APIs**:  
+    - `POST /withdraw` (auth required, payload: `{ coinAmount: number }`, validates `coins >= 1000`).  
+    - `GET /admin/payouts` (admin-only, lists pending/approved/rejected requests).  
+    - `PATCH /admin/payouts/:id` (admin-only, updates `status` to `approved` or `rejected`, deducts coins on approval).  
+  - **Deliverable**: Withdrawal form for bloggers + admin payout queue UI with approval workflow.  
+
+**Dependencies**: Blog Module (views tracking), User Module (auth and coin storage), Admin Module (approval process).  
+  
 <!---**Updated Schema**:  
 ```json
 {

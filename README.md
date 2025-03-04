@@ -1,15 +1,41 @@
-<!---
 
-# Detailed Feature Specification (DFS)  
-**Project Name**: ByteStack  
-**Slogan**: "Stack Your Tech Wisdom" (Locked from earlier)  
-**Version**: v1.0 (Core) + v2.0 (Coins & Extras)  
-**Date**: March 3, 2025  
-**Stack**: React (Frontend), Node.js + Express (Backend), MongoDB (Database), Stripe (Payments), Cloudinary (File Storage), Nodemailer (Notifications)  
-**Timeline**: 6 Weeks (v1, Solo), v2 TBD  
-**Objective**: Build a scalable, dev-focused blog platform with site-wide subscriptions, SEO-optimized content, rich blogging tools, discussions, social features, and future coin-based monetization.
+# Project Outline: ByteStack  
+**Name**: ByteStack  
+**Slogan**: "Stack Your Tech Wisdom"  
+**Stack**: React (Frontend), Node.js + Express (Backend), MongoDB (Database), Stripe (Payments), Cloudinary (File Storage), Nodemailer (Email Notifications), Socket.IO (Real-Time Notifications)  
+**Objective**: Build a scalable, tech-focused blog platform with site-wide subscriptions, SEO-optimized rich content, real-time discussions, social features, and future coin-based monetization.
 
---->
+## Core Components
+- **Portals**:  
+  - **User**: Access free/premium blogs, subscribe, join discussions, follow bloggers, receive real-time notifications.  
+  - **Blogger**: Create/edit SEO-friendly blogs, view analytics (views, discussions), manage discussions, earn coins (v2).  
+  - **Admin**: Monitor revenue/analytics, manage users/blogs, approve coin withdrawals (v2), control content visibility.  
+
+- **Rich Editor**: Markdown-based editor with image uploads (Cloudinary), code blocks (copy button), GIFs, headlines/subheadlines, and real-time SEO feedback (title length, meta tags).  
+
+- **Subscriptions**:  
+  - Site-wide plans: $15/month or $120/year via Stripe, 7-day free trial on sign-up.  
+  - Access: Premium blogs locked unless subscribed or in trial.  
+
+- **Discussions**:  
+  - Types: Public (threaded, all users) and Private (blogger-only feedback).  
+  - Real-Time: Socket.IO for live discussion updates and notifications (e.g., new replies).  
+
+- **Social Features**:  
+  - Follow: Users follow bloggers, tracked in profile.  
+  - Notifications: Real-time via Socket.IO (new blogs, discussion replies), plus email backups (Nodemailer).  
+
+- **SEO Optimization**:  
+  - Blog fields: `metaTitle`, `metaDescription`, `slug` for search engine visibility.  
+  - Checker: Real-time SEO analysis in editor (e.g., keyword density, tag usage).  
+
+- **Analytics (Blogger)**: Views, discussion counts, follower growth displayed in a dashboard.  
+
+- **Coin System (v2)**:  
+  - Earn: 1 coin per premium read.  
+  - Withdraw: 100 coins = ₹250, manual admin approval.  
+
+- **Infrastructure**: MongoDB for data, AWS for hosting, Stripe for payments, Cloudinary for files.
 
 ## Module Breakdown
 

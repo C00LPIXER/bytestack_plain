@@ -2,6 +2,7 @@
 **Name**: ByteStack  
 **Slogan**: "Stack Your Tech Wisdom"  
 **Stack**: React (Frontend, TypeScript), Node.js + Express (Backend, TypeScript), MongoDB (Database), Stripe (Payments), Cloudinary (File Storage), Nodemailer (Email Notifications), Socket.IO (Real-Time Notifications), Oauth(github, google)
+
 **Objective**: Build a scalable, tech-focused blog platform with site-wide subscriptions, SEO-optimized rich content, real-time discussions, advanced search/recommendations, and coin-based monetization for premium reads.
 
 ## Core Components

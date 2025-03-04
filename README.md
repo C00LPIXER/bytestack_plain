@@ -207,7 +207,7 @@
 
 ---
 
-### 7. Coin & Withdrawal Module (v2)
+### 7. Coin & Withdrawal Module
 **Portal**: Blogger + Admin  
 **Objective**: Reward bloggers with coins for premium reads and manage withdrawals.  
 **Features**:  

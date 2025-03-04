@@ -78,7 +78,7 @@
   - `GET /blogs/:slug` (SEO-friendly URL)  
   - `GET /user/:id/blogs`  
   - `GET /user/:id/analytics`  
-
+<!---
 **Updated Schema**:  
 ```json
 {
@@ -100,7 +100,7 @@
   }
 }
 ```
-
+--->
 ---
 
 ### 3. Subscription Module
@@ -227,7 +227,7 @@
   - APIs: `POST /withdraw` (auth required), `GET /admin/payouts`, `PATCH /admin/payouts/:id` (approve/reject).  
   - Deliverable: Withdrawal form + admin payout queue.  
 **Dependencies**: Blog Module (views), User Module (auth), Admin Module (approvals).  
-**Updated Schema**:  
+<!---**Updated Schema**:  
 ```json
 {
   "user": { "coins": "Number" },
@@ -241,6 +241,7 @@
   }
 }
 ```
+--->
 
 ---
 <!---

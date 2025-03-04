@@ -1,11 +1,14 @@
 <!---
+
 # Detailed Feature Specification (DFS)  
 **Project Name**: ByteStack  
+**Slogan**: "Stack Your Tech Wisdom" (Locked from earlier)  
 **Version**: v1.0 (Core) + v2.0 (Coins & Extras)  
 **Date**: March 3, 2025  
 **Stack**: React (Frontend), Node.js + Express (Backend), MongoDB (Database), Stripe (Payments), Cloudinary (File Storage), Nodemailer (Notifications)  
 **Timeline**: 6 Weeks (v1, Solo), v2 TBD  
-**Objective**: Build a scalable, dev-focused blog platform with site-wide subscriptions, rich content, discussions, social features, and future monetization via coins.
+**Objective**: Build a scalable, dev-focused blog platform with site-wide subscriptions, SEO-optimized content, rich blogging tools, discussions, social features, and future coin-based monetization.
+
 --->
 
 ## Module Breakdown
@@ -39,29 +42,64 @@
 
 ### 2. Blog Management Module
 **Portal**: Blogger (User with `isBlogger: true`)  
-**Objective**: Enable blog creation, editing, and viewing with premium access control.  
+**Objective**: Enable blog creation, editing, viewing, SEO optimization, and analytics with premium access control.  
 **Features**:  
 - **2.1 Blog Creation**  
   - Editor: React component with Markdown parsing, image uploads (Cloudinary), code blocks (copy button via `react-copy-to-clipboard`), GIF support, headlines/subheadlines.  
   - Toggle: Free or premium (`isPremium: Boolean`).  
-  - Deliverable: Rich text editor UI + blog creation API.  
+  - SEO Fields: Add `metaTitle`, `metaDescription`, `slug` (auto-generated from title, editable).  
+  - Deliverable: Rich text editor UI + blog creation API with SEO inputs.  
 - **2.2 Blog Editing**  
-  - Update: Modify content, toggle free/premium, save changes.  
+  - Update: Modify content, toggle free/premium, edit SEO fields, save changes.  
   - Publish: Make blog live (set `isPublished: true`).  
   - Deliverable: Edit form + PATCH endpoint.  
 - **2.3 Blog Viewing**  
   - Free: Open to all users.  
   - Premium: Locked unless `subType: 'active'` or `trialEndDate > now` (middleware check).  
-  - Deliverable: Blog page with access logic.  
+  - SEO: Serve `<meta>` tags (`metaTitle`, `metaDescription`) in HTML head, use `slug` in URL (e.g., `/blogs/:slug`).  
+  - Deliverable: Blog page with access logic and SEO metadata.  
 - **2.4 Profile Integration**  
   - List: Show user’s blogs on profile (filter by `userId`).  
   - Deliverable: Blog list component.  
-**Dependencies**: User Module (auth), Subscription Module (access), Cloudinary.  
+- **2.5 SEO Checker** *(New)*  
+  - Check: Analyze blog for SEO (e.g., title length < 60 chars, metaDescription 120-160 chars, at least one H1, image alt tags).  
+  - Feedback: Show pass/fail in editor UI (e.g., “Add more keywords” or “Good to go”).  
+  - Tools: Use a lightweight library (e.g., custom JS logic or `seo-analyzer`).  
+  - Deliverable: Real-time SEO feedback in editor.  
+- **2.6 Blogger Analytics** *(New)*  
+  - Metrics: Views (`views` count), discussion count (aggregate `discussions` by `blogId`), follower growth.  
+  - UI: Dashboard tab on profile (e.g., “Your Stats”).  
+  - API: `GET /user/:id/analytics` (auth required, `userId` match).  
+  - Deliverable: Analytics dashboard for bloggers.  
+**Dependencies**: User Module (auth), Subscription Module (access), Cloudinary, MongoDB (analytics).  
 **APIs**:  
   - `POST /blogs`  
   - `PATCH /blogs/:id`  
-  - `GET /blogs/:id`  
+  - `GET /blogs/:slug` (SEO-friendly URL)  
   - `GET /user/:id/blogs`  
+  - `GET /user/:id/analytics`  
+
+**Updated Schema**:  
+```json
+{
+  "blog": {
+    "_id": "ObjectId",
+    "userId": "ObjectId",
+    "title": "String",
+    "content": "String (Markdown)",
+    "metaTitle": "String",
+    "metaDescription": "String",
+    "slug": "String",
+    "isPremium": "Boolean",
+    "isPublished": "Boolean",
+    "isHidden": "Boolean (admin)",
+    "isRecommended": "Boolean (admin)",
+    "views": "Number",
+    "createdAt": "Date",
+    "updatedAt": "Date"
+  }
+}
+```
 
 ---
 
@@ -168,46 +206,80 @@
   - `PATCH /admin/blogs/:id`  
 
 ---
-<!---
-### 7. Infrastructure Module
-**Portal**: Shared  
-**Objective**: Support all modules with robust backend and deployment.  
+
+### 7. Coin & Withdrawal Module (v2)
+**Portal**: Blogger + Admin  
+**Objective**: Reward bloggers with coins for premium reads and manage withdrawals.  
 **Features**:  
-- **7.1 Database**  
-  - MongoDB: Collections (`users`, `blogs`, `discussions`, `notifications`).  
-  - Schema: Defined with Mongoose (e.g., `UserSchema`, `BlogSchema`).  
-  - Deliverable: Connected DB with indexes (e.g., `userId`, `blogId`).  
-- **7.2 Hosting**  
-  - Platform: Heroku or AWS EC2 (scalable, solo-friendly).  
-  - Deliverable: Deployed app with environment vars (Mongo URI, Stripe keys).  
-- **7.3 Payments**  
-  - Stripe: Monthly/yearly subs, trial setup, webhooks for updates.  
-  - Deliverable: Payment flow + webhook listener.  
-- **7.4 File Storage**  
-  - Cloudinary: Image/GIF uploads from editor.  
-  - Deliverable: Integrated upload API.  
+- **7.1 Coin Earning**  
+  - Logic: Award 1 coin per premium blog read (`views` increment if subbed/trial).  
+  - Field: Add `coins: Number` to user doc.  
+  - Trigger: On `GET /blogs/:id` (premium check).  
+  - Deliverable: Coin accrual system.  
+- **7.2 Wallet View**  
+  - Display: Show `coins` on blogger profile + lifetime earnings.  
+  - API: `GET /user/:id/wallet` (auth required).  
+  - Deliverable: Wallet UI component.  
+- **7.3 Withdrawal**  
+  - Threshold: 100 coins = ₹250.  
+  - Process: Blogger submits request, admin approves manually.  
+  - Action: Deduct `coins`, add to `payouts` collection, notify blogger.  
+  - APIs: `POST /withdraw` (auth required), `GET /admin/payouts`, `PATCH /admin/payouts/:id` (approve/reject).  
+  - Deliverable: Withdrawal form + admin payout queue.  
+**Dependencies**: Blog Module (views), User Module (auth), Admin Module (approvals).  
+**Updated Schema**:  
+```json
+{
+  "user": { "coins": "Number" },
+  "payout": {
+    "_id": "ObjectId",
+    "userId": "ObjectId",
+    "amount": "Number (INR)",
+    "status": "String ('pending' | 'approved' | 'rejected')",
+    "createdAt": "Date",
+    "approvedAt": "Date (null if pending/rejected)"
+  }
+}
+```
 
 ---
 
- ## 6-Week Development Plan (Solo)
-- **Week 1: Planning & Setup**  
-  - Repo: Initialize React + Express, connect MongoDB Atlas.  
-  - Wireframes: Sketch User, Blogger, Admin portals.  
-  - Deliverable: Running skeleton app.  
-- **Week 2: User + Blog**  
-  - Auth, profile, blog CRUD (editor setup).  
-  - Deliverable: Users can sign up, write blogs.  
-- **Week 3: Subscription**  
-  - Stripe integration, trial logic, premium lock.  
-  - Deliverable: Subs work, trial enforces.  
-- **Week 4: Discussion**  
-  - Public/private threads, delete functionality.  
-  - Deliverable: Discussions live under blogs.  
-- **Week 5: Follow + Notifications + Admin**  
-  - Follow system, email/in-app notifications, admin stats + controls.  
-  - Deliverable: Social features + basic admin.  
-- **Week 6: Testing & Deployment**  
-  - Test: All APIs, UI flows, Stripe live mode.  
-  - Deploy: Heroku/AWS, domain TBD.  
+### What We Added
+1. **SEO Checker (2.5)**  
+   - Makes blogs search-engine friendly—critical for discoverability.  
+   - Real-time feedback keeps bloggers on point.  
+2. **Blogger Analytics (2.6)**  
+   - Gives bloggers insight into their impact (views, discussions, followers).  
+   - Motivates content creation.  
+3. **Coin & Withdrawal (Module 7)**  
+   - Full v2 feature—coins for reads, manual payout system.  
+   - Ties into your monetization vision.
 
---- -->
+<!---
+
+### Your 6-Week v1 Plan (Updated)
+- **Week 1: Planning & Setup**  
+  - Repo, MongoDB Atlas, wireframes (add SEO + analytics UI).  
+  - Modules: 1.1-1.3.  
+- **Week 2: User + Blog Basics**  
+  - Auth, profile, blog CRUD (editor + SEO fields).  
+  - Modules: 1.4-1.6, 2.1-2.4.  
+- **Week 3: Subs + SEO Checker**  
+  - Stripe, trial, premium lock, SEO feedback.  
+  - Modules: 3, 2.5.  
+- **Week 4: Discussions**  
+  - Public/private threads, deletion.  
+  - Module: 4.  
+- **Week 5: Follow + Analytics + Admin**  
+  - Follow, notifications, blogger analytics, admin basics.  
+  - Modules: 5, 2.6, 6.  
+- **Week 6: Testing & Deploy**  
+  - Test all features, deploy to Heroku/AWS.  
+
+---
+
+### Next Steps
+- **Slogan**: “Stack Your Tech Wisdom” locked—want another option?  
+- **Markdown/PDF**: I’ll assume you’ll convert this updated spec—copy it into `ByteStack_DFS.md` and use `pandoc` or VS Code for PDF.  
+- **Code**: Start Week 1? I can drop an Express + Mongo setup to kick off **ByteStack**.
+--->

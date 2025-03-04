@@ -1,17 +1,16 @@
-
 # Project Outline: ByteStack  
 **Name**: ByteStack  
 **Slogan**: "Stack Your Tech Wisdom"  
 **Stack**: React (Frontend), Node.js + Express (Backend), MongoDB (Database), Stripe (Payments), Cloudinary (File Storage), Nodemailer (Email Notifications), Socket.IO (Real-Time Notifications)  
-**Objective**: Build a scalable, tech-focused blog platform with site-wide subscriptions, SEO-optimized rich content, real-time discussions, social features, and future coin-based monetization.
+**Objective**: Build a scalable, tech-focused blog platform with site-wide subscriptions, SEO-optimized rich content, real-time discussions, advanced search/recommendations, and coin-based monetization for premium reads.
 
 ## Core Components
 - **Portals**:  
-  - **User**: Access free/premium blogs, subscribe, join discussions, follow bloggers, receive real-time notifications.  
-  - **Blogger**: Create/edit SEO-friendly blogs, view analytics (views, discussions), manage discussions, earn coins (v2).  
-  - **Admin**: Monitor revenue/analytics, manage users/blogs, approve coin withdrawals (v2), control content visibility.  
+  - **User**: Access free/premium blogs, subscribe, join discussions, follow bloggers, receive real-time notifications, get personalized recommendations based on tech stack interests.  
+  - **Blogger**: Create/edit SEO-friendly blogs, view analytics (views, discussions), manage discussions, earn coins.  
+  - **Admin**: Monitor revenue/analytics, manage users/blogs, approve coin withdrawals, control content visibility/recommendations.  
 
-- **Rich Editor**: Markdown-based editor with image uploads (Cloudinary), code blocks (copy button), GIFs, headlines/subheadlines, and real-time SEO feedback (title length, meta tags).  
+- **Rich Editor**: Editor with image uploads (Cloudinary), code blocks (copy button), GIFs, headlines/subheadlines, different fonts, category based, and real-time SEO feedback (title length, meta tags).  
 
 - **Subscriptions**:  
   - Site-wide plans: $15/month or $120/year via Stripe, 7-day free trial on sign-up.  
@@ -29,13 +28,34 @@
   - Blog fields: `metaTitle`, `metaDescription`, `slug` for search engine visibility.  
   - Checker: Real-time SEO analysis in editor (e.g., keyword density, tag usage).  
 
+- **Search & Recommendations**:  
+  - **Sign-Up Tech Stack**: Prompt users to select interests during sign-up (e.g., JavaScript, Python, AI, DevOps) from a predefined list, stored as `techInterests: [String]`.  
+  - **Optimized Search**:  
+    - By: Title, content, tags (MongoDB text index).  
+    - Filters: Free/Premium (`isPremium`), Recommended (`isRecommended`), Tech Stack (`tags`), Date (`createdAt`), Popularity (`views`).  
+    - UI: Search bar with dropdown filters (e.g., “JavaScript + Free + Last 30 Days”).  
+    - History: Search history(10 resend hestory useing caped collection).
+  - **Personalized Recommendations**:  
+    - Logic: Match `techInterests` with blog `tags`, prioritize `isRecommended` and high `views`.  
+    - UI: “Recommended for You” section on homepage/profile.  
+    - Frequency: Update on login or new blog publish (Socket.IO trigger).  
+  - Deliverable: Smart search bar + recommendation engine tied to user interests.  
+
 - **Analytics (Blogger)**: Views, discussion counts, follower growth displayed in a dashboard.  
 
-- **Coin System (v2)**:  
-  - Earn: 1 coin per premium read.  
-  - Withdraw: 100 coins = ₹250, manual admin approval.  
+- **Coin System**:  
+  - Earn: earn coin per premium reads, awarded to blogger based on an algorithm.  
+  - Withdraw: 1000 coins = $100, manual admin approval.  
 
-- **Infrastructure**: MongoDB for data, AWS for hosting, Stripe for payments, Cloudinary for files.
+- **Infrastructure**:  
+  - **Database**: MongoDB for data storage, leveraging flexible schemas and text indexing for search.  
+  - **Hosting**: AWS (EC2 for compute, S3 for static assets if needed), ensuring scalability and reliability.  
+  - **Payments**: Stripe for subscription processing and webhook integration.  
+  - **File Storage**: Cloudinary for image/GIF uploads from the rich editor.  
+  - **Architecture**: Clean Architecture with SOLID principles (Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion), implemented in TypeScript for type safety and maintainability.  
+    - **Structure**: Organized into layers (e.g., Presentation, Application, Domain, Infrastructure), with interfaces defining contracts between layers.  
+    - **TypeScript**: Strong typing for models (e.g., `User`, `Blog`), APIs, and services to catch errors at compile time.
+
 
 ## Module Breakdown
 
